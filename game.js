@@ -7,11 +7,25 @@
       y: canvas.height
     };
 
-    console.log("game loaded OK");
+    var self = this;
+    var tick = function(){
+      self.update();
+      self.draw(screen, gameSize);
+      requestAnimationFrame(tick);
+    };
+
+    tick();
 
   };
 
   Game.prototype = {
+    update: function() {
+      console.log('hi!!')
+
+    },
+    draw: function(screen, gameSize) {
+
+    }
 
   };
 
