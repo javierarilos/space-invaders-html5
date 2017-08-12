@@ -32,6 +32,9 @@
       for (var i = 0; i < this.bodies.length; i++) {
         drawRect(scr,  this.bodies[i]);
       }
+    },
+    addBody: function(body) {
+      this.bodies.push(body);
     }
 
   };
@@ -52,6 +55,26 @@
         this.center.x += 2;
       }
 
+      if(this.keyboarder.isDown(this.keyboarder.KEYS.SPACE)) {
+        var bullet = new Bullet(
+          {x: this.center.x, y: this.center.y - this.size.y/2},
+          {x: 0, y: -6}  // bullet speed
+        );
+        this.game.addBody(bullet);
+      }
+    }
+  };
+
+  var Bullet = function(center, velocity) {
+    this.size = {x: 3, y: 3};
+    this.center = center;
+    this.velocity = velocity;
+  };
+
+  Bullet.prototype = {
+    update: function() {
+      this.center.x += this.velocity.x;
+      this.center.y += this.velocity.y;
     }
   };
 
@@ -85,7 +108,6 @@
 
   window.onload = function() {
     new Game('screen');
-
   };
 
 })();
