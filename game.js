@@ -21,10 +21,14 @@
 
   Game.prototype = {
     update: function() {
-      console.log('hi!!')
+      console.log('hi!!');
+      for (var i = 0; i < this.bodies.length; i++) {
+        this.bodies[i].update();
+      }
 
     },
     draw: function(scr, gameSize) {
+      scr.clearRect(0, 0, gameSize.x, gameSize.y);
       for (var i = 0; i < this.bodies.length; i++) {
         drawRect(scr,  this.bodies[i]);
       }
@@ -35,14 +39,18 @@
   var Player = function(game, gameSize) {
     this.game = game;
     this.size = {x: 15, y: 15};
-    this.center = {
-      x: gameSize.x / 2,
-      y: gameSize.y - this.size.x
-    };
+    this.center = {x: gameSize.x / 2, y: gameSize.y - this.size.x};
+    this.keyboarder = new Keyboarder();
   };
 
   Player.prototype = {
     update: function() {
+      console.log('player.update hello!');
+      if(this.keyboarder.isDown(this.keyboarder.KEYS.LEFT)) {
+        this.center.x -= 2;
+      } else if(this.keyboarder.isDown(this.keyboarder.KEYS.RIGHT)) {
+        this.center.x += 2;
+      }
 
     }
   };
@@ -55,6 +63,25 @@
       body.size.y
     );
   };
+
+  var Keyboarder = function() {
+    var keyState = {};
+
+    window.onkeydown = function(e) {
+      keyState[e.keyCode] = true;
+    };
+
+    window.onkeyup = function(e) {
+      keyState[e.keyCode] = false;
+    };
+
+    this.isDown = function(keyCode) {
+      return keyState[keyCode] === true;
+    };
+
+    this.KEYS = {LEFT: 37, RIGHT: 39, SPACE: 32};
+
+  }
 
   window.onload = function() {
     new Game('screen');
