@@ -20,6 +20,7 @@
   };
 
   Game.prototype = {
+
     update: function() {
       var bodies = this.bodies;
       var notCollidingWithAnything = function(b1) {
@@ -32,15 +33,27 @@
       }
 
     },
+
     draw: function(scr, gameSize) {
       scr.clearRect(0, 0, gameSize.x, gameSize.y);
       for (var i = 0; i < this.bodies.length; i++) {
         drawRect(scr,  this.bodies[i]);
       }
     },
+
     addBody: function(body) {
       this.bodies.push(body);
+    },
+
+    invadersBelow: function(invader) {
+      return this.bodies.filter(function(b) {
+        return b instanceof Invader &&
+          b.center.y > invader.center.y &&
+          b.center.x - invader.center.x < invader.size.x;
+      }).length > 0;
+
     }
+
 
   };
 
@@ -86,6 +99,14 @@
 
       this.center.x += this.speedX;
       this.patrolX += this.speedX;
+
+      if (Math.random() > 0.995 && !this.game.invadersBelow(this)) {
+        var bullet = new Bullet(
+          {x: this.center.x, y: this.center.y + this.size.y/2},
+          {x: Math.random()-0.5, y: 2}  // bullet speed
+        );
+        this.game.addBody(bullet);
+      }
 
     }
   };
